@@ -25,7 +25,7 @@ ask() {
   choice=""
   read -p "> $1: " choice
   echo
-}
+} 
 
 main() {
   sleep $1

@@ -53,6 +53,18 @@ resource "github_branch" "subproject_branches" {
   source_sha = "169e3df2abb8fdba926ec58785b769459461c32c"
 }
 
+resource "github_repository_file" "subproject_readme" {
+  for_each            = var.github_repository_subprojects
+  repository          = var.github_repository_name
+  branch              = "main"
+  file                = "src/packages/${each.value}/readme.md"
+  content             = "# Managed by Terraform"
+  commit_message      = "Managed by Terraform - subproject ${each.value}"
+  commit_author       = "terraform"
+  commit_email        = "noreply@terraform.com"
+  overwrite_on_create = true
+}
+
 resource "github_repository_file" "test-file" {
   repository          = var.github_repository_name
   branch              = "main"
