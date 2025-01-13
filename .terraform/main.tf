@@ -37,3 +37,14 @@ resource "github_branch" "subproject_branches" {
   # The commit hash to start from
   source_sha = "169e3df2abb8fdba926ec58785b769459461c32c"
 }
+
+resource "github_repository_file" "foo" {
+  repository          = var.github_repository_name
+  branch              = "main"
+  file                = ".terraform/out/test.md"
+  content             = "hello"
+  commit_message      = "Managed by Terraform"
+  commit_author       = "Terraform User"
+  commit_email        = "terraform@example.com"
+  overwrite_on_create = true
+}

@@ -34,7 +34,7 @@ main() {
       ;;
     *)
       echo "choice <- $choice"
-      ask "Invalid choice. Please enter a valid choice."
+      ask "Invalid choice. Enter your choice"
       ;;
     esac
   done
