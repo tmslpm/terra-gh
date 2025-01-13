@@ -4,8 +4,13 @@ deploy() {
   echo "> Deploy in progress..."
   terraform -chdir="./.terraform" plan
   terraform -chdir="./.terraform" apply
-  sleep 1
-  main
+  main 1
+}
+
+uprade() {
+  terraform -chdir="./.terraform" get
+  terraform -chdir="./.terraform" init -upgrade
+  main 1
 }
 
 ask() {
@@ -15,9 +20,12 @@ ask() {
 }
 
 main() {
+  sleep $1
   echo "> Menu:
  ---|---------|-----------------------------------------------
-  d | deploy  | Run Terraform plan and apply
+  d | deploy  | Run plan and apply
+ ---|---------|-----------------------------------------------
+  u | upgrade | Get module and upgrade 
  ---|---------|-----------------------------------------------
   e | exit    | Stop the script
  ---|---------|-----------------------------------------------"
@@ -26,6 +34,10 @@ main() {
     case "$choice" in
     d)
       deploy
+      break
+      ;;
+    u)
+      uprade
       break
       ;;
     e)
@@ -40,4 +52,4 @@ main() {
   done
 }
 
-main
+main 0

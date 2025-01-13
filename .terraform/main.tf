@@ -1,50 +1,11 @@
-terraform {
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
-  }
+module "hello-world" {
+  source = "./modules/hello-world"
 }
 
-provider "github" {
-  token = var.github_token
-  owner = var.github_owner
-}
-
-# Step:
-# - import `terraform import github_repository.$github_name $repo_name`.
-# - edit the resource github_repository
-# - run `terraform init` (first time only); `terraform plan` and `terraform apply`.
-resource "github_repository" "tmslpm" {
-  name                 = var.github_repository_name
-  description          = "test"
-  topics               = ["terraform", "github", "cli"]
-  license_template     = "mit"
-  is_template          = true
-  has_wiki             = false
-  has_projects         = false
-  has_downloads        = false
-  has_issues           = true
-  has_discussions      = true
-  vulnerability_alerts = true
-}
-
-resource "github_branch" "subproject_branches" {
-  for_each   = var.github_repository_subprojects
-  repository = var.github_repository_name
-  branch     = "branch-${each.value}"
-  # The commit hash to start from
-  source_sha = "169e3df2abb8fdba926ec58785b769459461c32c"
-}
-
-resource "github_repository_file" "foo" {
-  repository          = var.github_repository_name
-  branch              = "main"
-  file                = ".terraform/out/test.md"
-  content             = "hello"
-  commit_message      = "Managed by Terraform"
-  commit_author       = "Terraform User"
-  commit_email        = "terraform@example.com"
-  overwrite_on_create = true
+module "gh-repository" {
+  source                        = "./modules/gh-repository"
+  github_owner                  = var.github_owner
+  github_repository_name        = var.github_repository_name
+  github_repository_subprojects = var.github_repository_subprojects
+  github_token                  = var.github_token
 }
