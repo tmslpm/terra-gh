@@ -7,20 +7,6 @@ terraform {
   }
 }
 
-variable "github_token" {
-  type      = string
-  sensitive = true
-}
-
-variable "github_owner" {
-  type = string
-}
-
-variable "subprojects" {
-  type    = set(string)
-  default = ["foo", "bar"]
-}
-
 provider "github" {
   token = var.github_token
   owner = var.github_owner
@@ -31,7 +17,7 @@ provider "github" {
 # - edit the resource github_repository
 # - run `terraform init` (first time only); `terraform plan` and `terraform apply`.
 resource "github_repository" "tmslpm" {
-  name             = "terra-gh"
+  name             = var.github_repository_name
   description      = "test"
   license_template = "mit"
   is_template      = true
@@ -41,4 +27,10 @@ resource "github_repository" "tmslpm" {
   has_issues       = true
   has_discussions  = true
   topics           = ["terraform", "github", "cli"]
+}
+
+resource "github_branch" "development" {
+  repository = var.github_repository_name
+  branch     = "branch-test"
+  
 }

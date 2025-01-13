@@ -16,5 +16,5 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           # TODO: replace GITHUB_USERNAME by a valid github username
-          assignees: GITHUB_USERNAME
+          assignees: tmslpm
           numOfAssignee: 1
