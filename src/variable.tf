@@ -1,8 +1,8 @@
 variable "github_token" {
   description = "GitHub Personal Access Token used for authenticating the API requests. This token should have sufficient permissions to interact with the repositories."
   type        = string
-  nullable    = true
-  sensitive   = false
+  nullable    = false
+  sensitive   = true
 }
 
 variable "github_owner" {
@@ -23,5 +23,7 @@ variable "github_repository_name" {
 variable "github_repository_subprojects" {
   description = "A set of subproject names, represented as a set of strings. These subprojects can be used to manage separate parts or components within the main repository."
   type        = set(string)
+  nullable    = false
+  sensitive   = false
   default     = ["foo", "bar"]
 }
