@@ -1,0 +1,43 @@
+#!/bin/bash
+
+deploy() {
+  echo "> Deploy in progress..."
+  terraform -chdir="./.terraform" plan
+  terraform -chdir="./.terraform" apply
+  sleep 1
+  main
+}
+
+ask() {
+  choice=""
+  read -p "> $1: " choice
+  echo
+}
+
+main() {
+  echo "> Menu:
+ ---|---------|-----------------------------------------------
+  d | deploy  | Run Terraform plan and apply
+ ---|---------|-----------------------------------------------
+  e | exit    | Stop the script
+ ---|---------|-----------------------------------------------"
+  ask "Enter your choice"
+  while true; do
+    case "$choice" in
+    d)
+      deploy
+      break
+      ;;
+    e)
+      echo "> Byeee!"
+      exit 0
+      ;;
+    *)
+      echo "choice <- $choice"
+      ask "Invalid choice. Please enter a valid choice."
+      ;;
+    esac
+  done
+}
+
+main
