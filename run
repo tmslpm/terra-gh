@@ -8,8 +8,16 @@ deploy() {
 }
 
 uprade() {
+  echo "> Upgrade terraform module in progress..."
   terraform -chdir="./.terraform" get
   terraform -chdir="./.terraform" init -upgrade
+  main 1
+}
+
+switchWorkspace() {
+  terraform -chdir="./.terraform" workspace select $1
+  workspace_current=$(terraform -chdir="./.terraform" workspace show)
+  echo "> new workspace selected $workspace_current."
   main 1
 }
 
@@ -21,33 +29,37 @@ ask() {
 
 main() {
   sleep $1
-  echo "> Menu:
- ---|---------|-----------------------------------------------
-  d | deploy  | Run plan and apply
- ---|---------|-----------------------------------------------
-  u | upgrade | Get module and upgrade 
- ---|---------|-----------------------------------------------
-  e | exit    | Stop the script
- ---|---------|-----------------------------------------------"
+  workspace_index=0
+  workspace_current=$(terraform -chdir="./.terraform" workspace show)
+  workspace_list=$(terraform -chdir="./.terraform" workspace list | sed 's/^[* ]*//' | tr '\n' ' ')
+  workspace_arr=()
+
+  echo "> Workspaces: (current: $workspace_current)"
+  for v in $workspace_list; do
+    workspace_arr[workspace_index]=$v
+    echo " ---|---------------------------------------------------------"
+    echo "  $workspace_index | ${workspace_arr[workspace_index]}"
+    workspace_index=$((workspace_index + 1))
+  done
+
+  echo "> Action:
+ ---|---------------------------------------------------------
+  d | deploy: Run plan and apply
+ ---|---------------------------------------------------------
+  u | upgrade: Get module and upgrade 
+ ---|---------------------------------------------------------
+  e | exit: Stop the script
+  "
   ask "Enter your choice"
   while true; do
+    if [[ "$choice" =~ ^[0-9]+$ ]]; then
+      switchWorkspace "${workspace_arr[choice]}" && break
+    fi
     case "$choice" in
-    d)
-      deploy
-      break
-      ;;
-    u)
-      uprade
-      break
-      ;;
-    e)
-      echo "> Byeee!"
-      exit 0
-      ;;
-    *)
-      echo "choice <- $choice"
-      ask "Invalid choice. Enter your choice"
-      ;;
+    d) deploy && break ;;
+    u) uprade && break ;;
+    e) echo "> Byeee!" && exit 0 ;;
+    *) ask "Error occured. Enter your choice" ;;
     esac
   done
 }

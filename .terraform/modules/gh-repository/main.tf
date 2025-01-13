@@ -19,7 +19,7 @@ provider "github" {
 # - run `terraform init` (first time only); `terraform plan` and `terraform apply`.
 resource "github_repository" "tmslpm" {
   name                 = var.github_repository_name
-  description          = "Repository managed by Terraform"
+  description          = "Repository managed by Terraform!"
   topics               = ["terraform", "github", "cli"]
   license_template     = "mit"
   is_template          = true

@@ -1,5 +1,20 @@
+# external module can be found here: https://registry.terraform.io/
+
+# - terraform workspace show
+# - terraform workspace list
+# - terraform workspace new $name
+locals {
+  env = terraform.workspace
+  example = {
+    default = "hello-default"
+    prod    = "hello-prod"
+    dev     = "hello-dev"
+  }
+}
+
 module "hello-world" {
-  source = "./modules/hello-world"
+  source      = "./modules/hello-world"
+  my_variable = lookup(local.example, local.env)
 }
 
 module "gh-repository" {
