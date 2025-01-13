@@ -26,8 +26,19 @@ provider "github" {
   owner = var.github_owner
 }
 
-# import `terraform import github_repository.$github_name $repo_name`
+# Step:
+# - import `terraform import github_repository.$github_name $repo_name`.
+# - edit the resource github_repository
+# - run `terraform init` (first time only); `terraform plan` and `terraform apply`.
 resource "github_repository" "tmslpm" {
-  name        = "terra-gh"
-  description = "test" 
+  name             = "terra-gh"
+  description      = "test"
+  license_template = "mit"
+  is_template      = true
+  has_wiki         = false
+  has_projects     = false
+  has_downloads    = false
+  has_issues       = true
+  has_discussions  = true
+  topics           = ["terraform", "github", "cli"]
 }
