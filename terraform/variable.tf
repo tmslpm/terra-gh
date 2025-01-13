@@ -3,6 +3,11 @@ variable "github_token" {
   type        = string
   nullable    = false
   sensitive   = true
+  default     = ""
+  validation {
+    condition     = length(var.github_token) > 0
+    error_message = "variable terraform \"github_token\" cannot be empty"
+  }
 }
 
 variable "github_owner" {
@@ -10,6 +15,11 @@ variable "github_owner" {
   type        = string
   nullable    = false
   sensitive   = false
+  default     = ""
+  validation {
+    condition     = length(var.github_owner) > 0
+    error_message = "variable terraform \"github_owner\" cannot be empty"
+  }
 }
 
 variable "github_repository_name" {
@@ -17,7 +27,11 @@ variable "github_repository_name" {
   type        = string
   nullable    = false
   sensitive   = false
-  default     = "terra-gh"
+  default     = ""
+  validation {
+    condition     = length(var.github_repository_name) > 0
+    error_message = "variable terraform \"github_repository_name\" cannot be empty"
+  }
 }
 
 variable "github_repository_subprojects" {
