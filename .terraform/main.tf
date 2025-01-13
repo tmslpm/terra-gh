@@ -3,9 +3,10 @@ module "hello-world" {
 }
 
 module "gh-repository" {
-  source                        = "./modules/gh-repository"
-  github_owner                  = var.github_owner
-  github_repository_name        = var.github_repository_name
-  github_repository_subprojects = var.github_repository_subprojects
+  source = "./modules/gh-repository"
+  # config
   github_token                  = var.github_token
+  github_repository_subprojects = ["foo", "bar"]
+  github_repository_name        = "terra-gh"
+  github_owner                  = "tmslpm"
 }
