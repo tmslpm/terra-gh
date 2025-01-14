@@ -1,67 +1,80 @@
 #!/bin/bash
 
+updateWorkspaceVariable() {
+  workspace_current=$(terraform -chdir="$PATH_TERRAFORM_DIR" workspace show)
+  local pwdName="$(basename "$PATH_PWD")"
+  logPrfx="$(tput setaf 228)> $(tput setaf 42) $pwdName/${PATH_TERRAFORM_DIR#*/$pwdName/} $(tput setaf 45)($workspace_current)$(tput sgr0):"
+  local workspace_list=$(terraform -chdir="$PATH_TERRAFORM_DIR" workspace list | sed 's/^[* ]*//' | tr '\n' ' ')
+  local workspace_index=0
+  local divider=" -----+---------------------------------------------------------\n"
+  workspace_menu="\n"
+  ## action [key: 0-9] select workspace
+  for v in $workspace_list; do
+    workspace_array[workspace_index]=$v
+    workspace_menu+="$(printf "   $(tput setaf 228)%s$(tput sgr0)  | $(tput setaf 75)%s $(tput setaf 45)\"%s\"$(tput sgr0)" "$workspace_index" "select workspace" "${workspace_array[workspace_index]}")\n$divider"
+    workspace_index=$((workspace_index + 1))
+  done
+  ## action [key: d] deploy current workspace
+  workspace_menu+="$(printf "   $(tput setaf 228)%s$(tput sgr0)  | $(tput setaf 75)%s$(tput sgr0)" "d" "deploy: run plan and apply")\n$divider"
+  ## action [key: u] upgrade current workspace
+  workspace_menu+="$(printf "   $(tput setaf 228)%s$(tput sgr0)  | $(tput setaf 75)%s$(tput sgr0)" "u" "upgrade: get module and upgrade")\n$divider"
+  ## action [key: e] exit
+  workspace_menu+="$(printf "   $(tput setaf 228)%s$(tput sgr0)  | $(tput setaf 75)%s$(tput sgr0)" "e" "exit: stop the script")\n\n"
+}
+
+if [[ -z "$CTX" ]]; then
+  # r: 202 g: 42 b:45 y:228
+  declare -r CTX=true
+  declare -r PATH_PWD="$(pwd)"
+  declare -r PATH_TERRAFORM_DIR="$PATH_PWD/.terraform"
+  declare -r PATH_RUN_SCRIPT="$PATH_PWD/run"
+  declare -a workspace_array=()
+  declare workspace_current="?"
+  declare workspace_menu="workspace menu not initialized"
+  declare logPrfx="$(tput setaf 228)>$(tput sgr0)"
+  updateWorkspaceVariable
+  printf "$logPrfx %s \n" "starting terraform turbo script 3000"
+fi
+
 deploy() {
-  echo "> Deploy in progress..."
-  terraform -chdir="./.terraform" plan
-  terraform -chdir="./.terraform" apply
-  main 1
+  printf "$logPrfx %s \n" "deploying terraform"
+  terraform -chdir="$PATH_TERRAFORM_DIR" plan
+  terraform -chdir="$PATH_TERRAFORM_DIR" apply
+  source "$PATH_RUN_SCRIPT"
 }
 
 uprade() {
-  echo "> Upgrade terraform module in progress..."
-  terraform -chdir="./.terraform" get
-  terraform -chdir="./.terraform" init -upgrade
-  main 1
+  printf "$logPrfx %s \n" "updating terraform module"
+  terraform -chdir="$PATH_TERRAFORM_DIR" get
+  terraform -chdir="$PATH_TERRAFORM_DIR" init -upgrade
+  source "$PATH_RUN_SCRIPT"
 }
 
 switchWorkspace() {
-  terraform -chdir="./.terraform" workspace select $1
-  workspace_current=$(terraform -chdir="./.terraform" workspace show)
-  echo "> new workspace selected $workspace_current."
-  main 1
+  if [[ -z "$1" ]]; then
+    printf "$logPrfx $(tput setaf 1)%s $(tput setaf 228)%s$(tput sgr0)\n" "error, invalid workspace index" "$2"
+  else
+    printf "$logPrfx %s \n" "selecting terraform workspace"
+    terraform -chdir="$PATH_TERRAFORM_DIR" workspace select $1
+    updateWorkspaceVariable
+  fi
+  source "$PATH_RUN_SCRIPT"
 }
 
-ask() {
-  choice=""
-  read -p "> $1: " choice
-  echo
-} 
-
 main() {
-  sleep $1
-  workspace_index=0
-  workspace_current=$(terraform -chdir="./.terraform" workspace show)
-  workspace_list=$(terraform -chdir="./.terraform" workspace list | sed 's/^[* ]*//' | tr '\n' ' ')
-  workspace_arr=()
-
-  echo "> Workspaces: (current: $workspace_current)"
-  for v in $workspace_list; do
-    workspace_arr[workspace_index]=$v
-    echo " ---|---------------------------------------------------------"
-    echo "  $workspace_index | ${workspace_arr[workspace_index]}"
-    workspace_index=$((workspace_index + 1))
-  done
-
-  echo "> Action:
- ---|---------------------------------------------------------
-  d | deploy: Run plan and apply
- ---|---------------------------------------------------------
-  u | upgrade: Get module and upgrade 
- ---|---------------------------------------------------------
-  e | exit: Stop the script
-  "
-  ask "Enter your choice"
+  printf "$logPrfx %s \n$workspace_menu" "choose an action"
   while true; do
+    read -p "$logPrfx enter your choice: " choice
     if [[ "$choice" =~ ^[0-9]+$ ]]; then
-      switchWorkspace "${workspace_arr[choice]}" && break
+      switchWorkspace "${workspace_array[choice]}" "$choice" && break
     fi
     case "$choice" in
     d) deploy && break ;;
     u) uprade && break ;;
-    e) echo "> Byeee!" && exit 0 ;;
-    *) ask "Error occured. Enter your choice" ;;
+    e) printf "$logPrfx %s\n" "bye!" && exit 0 ;;
     esac
+    unset choice
+    printf "$logPrfx $(tput setaf 1)%s$(tput sgr0)\n" "error, invalid choice"
   done
 }
-
-main 0
+main
