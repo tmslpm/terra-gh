@@ -1,0 +1,28 @@
+name: Terraform Workflow
+
+on:
+  push:
+    branches:
+      - "*"
+    types: [deleted]
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Set GitHub token environment variable
+        run: echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Run Terraform after branch deletion
+        run: |
+          cd ./.terraform
+          terraform init
+          terraform plan -var "github_token=${{ secrets.GITHUB_TOKEN }}"
+          terraform apply -var "github_token=${{ secrets.GITHUB_TOKEN }}" -auto-approve

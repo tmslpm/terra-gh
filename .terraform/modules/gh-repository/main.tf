@@ -46,11 +46,16 @@ resource "github_repository_dependabot_security_updates" "tmslpm" {
 }
 
 resource "github_branch" "subproject_branches" {
-  for_each   = var.github_repository_subprojects
+  depends_on    = [github_repository_file.subproject_readme]
+  for_each      = var.github_repository_subprojects
+  repository    = var.github_repository_name
+  branch        = "branch-${each.value}"
+  source_branch = "main"
+}
+
+data "github_branch" "main_branch" {
   repository = var.github_repository_name
-  branch     = "branch-${each.value}"
-  # The commit hash to start from
-  source_sha = "169e3df2abb8fdba926ec58785b769459461c32c"
+  branch     = "main"
 }
 
 resource "github_repository_file" "subproject_readme" {
@@ -62,16 +67,5 @@ resource "github_repository_file" "subproject_readme" {
   commit_message      = "Managed by Terraform - subproject ${each.value}"
   commit_author       = "terraform"
   commit_email        = "noreply@terraform.com"
-  overwrite_on_create = true
-}
-
-resource "github_repository_file" "test-file" {
-  repository          = var.github_repository_name
-  branch              = "main"
-  file                = ".terraform/out/test.md"
-  content             = "hello"
-  commit_message      = "Managed by Terraform"
-  commit_author       = "terraform"
-  commit_email        = "noreply@terraform.com"
-  overwrite_on_create = true
+  overwrite_on_create = false
 }
