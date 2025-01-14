@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "foxundermoon.shell-format",
+    "pkief.material-icon-theme",
+    "pomdtr.excalidraw-editor",
+    "hashicorp.terraform",
+    "4ops.terraform",
+    "run-at-scale.terraform-doc-snippets"
+  ]
+}

@@ -23,7 +23,6 @@ updateWorkspaceVariable() {
 }
 
 if [[ -z "$CTX" ]]; then
-  # r: 202 g: 42 b:45 y:228
   declare -r CTX=true
   declare -r PATH_PWD="$(pwd)"
   declare -r PATH_TERRAFORM_DIR="$PATH_PWD/.terraform"
