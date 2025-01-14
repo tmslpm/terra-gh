@@ -16,10 +16,11 @@ jobs:
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
- 
+
       - name: Run Terraform after branch deletion
         run: |
           cd ./.terraform
           terraform init
+          terraform import github_repository.tmslpm terra-gh
           terraform plan -var "github_token=${{ secrets.TERRA_GH_BOT }}"
           terraform apply -var "github_token=${{ secrets.TERRA_GH_BOT }}" -auto-approve
