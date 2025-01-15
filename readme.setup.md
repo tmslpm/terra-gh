@@ -33,19 +33,26 @@
 
 ----------------------
  
-4. Copy the template file [./terraform/terraform.tfvars.template][102].
-   and paste the copied file into the same directory and rename 
-   it to [./terraform/terraform.tfvars][103]:
+4. Copy the template file and paste the copied file into the terraform directory and rename.
    ```sh
-   cp "./terraform/terraform.tfvars.template" "./terraform/terraform.tfvars"
+   cp "./terraform/templates/terraform.tfvars.template" "./terraform/terraform.tfvars"
+   cp "./terraform/templates/backend.tf.config.template" "./terraform/backend.tf.config"
    ```
- 
+   
 ----------------------
  
 5. Create a [new GitHub Personal Access Token][1], and update the `github_token` 
    variable in [./terraform/terraform.tfvars][103] with the generated token.
+   
+----------------------
+
+6. Setup your terraform backend
+
+----------------------
 
 ## Note
+
+![excal note](./.terraform/.excal/setup.excalidraw.png)
 
 ### import existing repository
 ```sh
@@ -60,7 +67,7 @@ terraform import github_repository.tmslpm terra-gh
 [2]: <https://cli.github.com/> "Open the official GitHub CLI page for installation and documentation." 
 [3]: <https://choosealicense.com/> "Open the official ChooseALicense.com to choose an open source license."
 [101]: <./license.md> "Path to the license file: `./license.md`. (local)"
-[102]: <./terraform/terraform.tfvars.template> "Path to the template file used for initializing variables: `./terraform/terraform.tfvars.template`. (local)"
+[102]: <./terraform/templates/terraform.tfvars.template> "Path to the template file used for initializing variables: `./terraform/templates/terraform.tfvars.template`. (local)"
 [103]: <./terraform/terraform.tfvars> "Path to the variables file: `./terraform/terraform.tfvars`. (local)"
 [104]: <./CODEOWNERS> "Path to code owners file"
 [105]: <./.github/CODEOWNERS> "Path to code owners file"
