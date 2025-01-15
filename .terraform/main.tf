@@ -1,8 +1,5 @@
 # external module can be found here: https://registry.terraform.io/
 
-# - terraform workspace show
-# - terraform workspace list
-# - terraform workspace new $name
 locals {
   env = terraform.workspace
   example = {
