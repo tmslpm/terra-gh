@@ -3,4 +3,7 @@
     "**/**.tfstate.backup": true,
     "**/.terraform.lock.hcl": false
   },
+  "files.associations": {
+    "*.tf.config": "terraform"
+  }
 }

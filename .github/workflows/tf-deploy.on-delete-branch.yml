@@ -1,11 +1,11 @@
 name: Terraform Workflow
 
 on:
-  push:
-    branches:
-      - "*"
-    types: [deleted]
-  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - "*"
+  #   types: [deleted]
+  # workflow_dispatch:
 
 jobs:
   terraform:
@@ -20,7 +20,7 @@ jobs:
       - name: Run Terraform after branch deletion
         run: |
           cd ./.terraform
-          terraform init
+          terraform init # <<<< https://developer.hashicorp.com/terraform/language/backend
           terraform import github_repository.tmslpm terra-gh
           terraform plan -var "github_token=${{ secrets.TERRA_GH_BOT }}"
           terraform apply -var "github_token=${{ secrets.TERRA_GH_BOT }}" -auto-approve
