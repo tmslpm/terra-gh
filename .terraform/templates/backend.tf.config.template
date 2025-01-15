@@ -1,8 +1,0 @@
-endpoints = {
-  s3 = ""
-}
-access_key = ""
-secret_key = ""
-bucket     = ""
-region     = ""
-key        = ""

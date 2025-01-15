@@ -4,6 +4,6 @@
     "**/.terraform.lock.hcl": false
   },
   "files.associations": {
-    "*.tf.config": "terraform"
+    "*.tfbackend": "terraform"
   }
 }

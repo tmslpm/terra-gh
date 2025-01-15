@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     github = {
@@ -13,10 +12,6 @@ provider "github" {
   owner = var.github_owner
 }
 
-# Step:
-# - import `terraform import github_repository.$github_name $repo_name`.
-# - edit the resource github_repository
-# - run `terraform init` (first time only); `terraform plan` and `terraform apply`.
 resource "github_repository" "tmslpm" {
   name                 = var.github_repository_name
   description          = "Repository managed by Terraform!"
@@ -69,6 +64,7 @@ resource "github_repository_file" "subproject_readme" {
   commit_email        = "noreply@terraform.com"
   overwrite_on_create = true
 }
+
 /*
 resource "github_issue_label" "example_labels" {
   for_each = {

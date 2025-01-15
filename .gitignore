@@ -1,6 +1,7 @@
 **/.terraform/.terraform/ 
 **/.terraform/*.config 
 *.tf.config
+*.tfbackend
 *.tfstate
 *.tfstate.*
 *.tfvars

@@ -1,0 +1,4 @@
+endpoints  = { s3 = "" }
+bucket     = ""
+region     = ""
+key        = ""
