@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "name": "src",
+      "path": ".."
+    },
+    {
+      "name": "bar",
+      "path": "../src/packages/bar"
+    },
+    {
+      "name": "foo",
+      "path": "../src/packages/foo"
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.tfbackend": "terraform"
+    },
+    "files.exclude": {
+      "**/**.tfstate.backup": true,
+      "**/.terraform.lock.hcl": false
+    },
+  }
+}

@@ -2,16 +2,12 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run Script with Git Bash",
+      "label": "terraform workspace show",
       "type": "shell",
-      "command": "C:\\Program Files\\Git\\bin\\bash.exe",
-      "args": [
-        "-c",
-        "./run"
-      ],
+      "command": "terraform -chdir=\"./.terraform\" workspace show",
       "group": {
         "kind": "build",
-        "isDefault": true
+        "isDefault": true,
       },
       "problemMatcher": [],
       "presentation": {
@@ -20,7 +16,47 @@
         "focus": false,
         "panel": "shared",
         "showReuseMessage": false,
-        "clear": true
+        "clear": false,
+      }
+    },
+    {
+      "label": "terraform plan",
+      "type": "shell",
+      "command": "terraform -chdir=\"./.terraform\" plan",
+      "group": {
+        "kind": "build",
+        "isDefault": true,
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
+      }
+    },
+    {
+      "label": "terraform apply",
+      "type": "shell",
+      "command": "terraform -chdir=\"./.terraform\" apply",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "terraform plan",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true,
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false,
       }
     }
   ]
